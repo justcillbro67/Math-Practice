@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Practice</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 16px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      color: #a78bfa;
+    }
+
+    p.hint {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 32px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #3b3b6d;
+      background: #16213e;
+      color: #eee;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus { border-color: #a78bfa; }
+
+    button {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      background: #a78bfa;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #7c3aed; }
+
+    #result {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .table-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #a78bfa;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .table-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      background: #16213e;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+
+    .row .eq { color: #888; }
+    .row .ans { color: #34d399; font-weight: bold; }
+
+    .error {
+      color: #f87171;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Math Practice</h1>
+  <p class="hint">Try: "table of 5" &nbsp;|&nbsp; "7 multiplication chart" &nbsp;|&nbsp; "show 12"</p>
+
+  <div class="input-row">
+    <input id="query" type="text" placeholder='e.g. "table of 6"' autofocus />
+    <button onclick="handleInput()">Go</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('query').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleInput();
+    });
+
+    function handleInput() {
+      const raw = document.getElementById('query').value.trim();
+      const result = document.getElementById('result');
+
+      const num = extractNumber(raw);
+
+      if (num === null || isNaN(num)) {
+        result.innerHTML = `<p class="error">Couldn't find a number in that. Try "table of 5" or just "9".</p>`;
+        return;
+      }
+
+      let html = `<div class="table-title">Multiplication Table of ${num}</div><div class="table-grid">`;
+      for (let i = 1; i <= 20; i++) {
+        html += `
+          <div class="row">
+            <span>${num} × ${i}</span>
+            <span class="eq">=</span>
+            <span class="ans">${num * i}</span>
+          </div>`;
+      }
+      html += '</div>';
+      result.innerHTML = html;
+    }
+
+    function extractNumber(text) {
+      // Try to find a number anywhere in the text
+      const match = text.match(/\d+(\.\d+)?/);
+      if (match) return parseFloat(match[0]);
+      // Also handle words like "five", "seven" etc.
+      const words = { one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10,
+                      eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15 };
+      const lower = text.toLowerCase();
+      for (const [word, val] of Object.entries(words)) {
+        if (lower.includes(word)) return val;
+      }
+      return null;
+    }
+  </script>
+
+</body>
+</html>
