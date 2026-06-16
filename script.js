@@ -1,15 +1,11 @@
-document.getElementById('query').addEventListener('keydown', e => {
-  if (e.key === 'Enter') handleInput();
-});
-
 function handleInput() {
-  const raw = document.getElementById('query').value.trim();
+  const raw = document.getElementById('query').value;
   const result = document.getElementById('result');
 
-  const num = extractNumber(raw);
+  const num = parseFloat(raw);
 
-  if (num === null || isNaN(num)) {
-    result.innerHTML = `<p class="error">Couldn't find a number in that. Try "table of 5" or just "9".</p>`;
+  if (!raw || isNaN(num)) {
+    result.innerHTML = `<p class="error">Please select a number first.</p>`;
     return;
   }
 
